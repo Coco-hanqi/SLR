@@ -5,7 +5,7 @@ drawingModule = mediapipe.solutions.drawing_utils
 handsModule = mediapipe.solutions.hands
 
 with handsModule.Hands(static_image_mode=True) as hands:
-    image = cv2.imread(r"C:\Users\Xylon\OneDrive\Desktop\SLR\mediapipe\open.jpg")
+    image = cv2.imread(r"C:\Users\Xylon\OneDrive\Desktop\SLR\mediapipe\data\frame1.4.jpg")
 
     results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
