@@ -7,7 +7,7 @@ drawingModule = mediapipe.solutions.drawing_utils
 handsModule = mediapipe.solutions.hands
 
 #  create a CSV file
-header = ['WRIST_p', 'WRIST_n', 'THUMB_CMC_p', 'THUMB_CMC_n',
+header = ['gloss', 'video_id', 'frame_id', 'WRIST_p', 'WRIST_n', 'THUMB_CMC_p', 'THUMB_CMC_n',
           'THUMB_MCP_p', 'THUMB_MCP_n', 'THUMB_IP_p', 'THUMB_IP_n',
           'THUMB_TIP_p', 'THUMB_TIP_n', 'INDEX_FINGER_MCP_p', 'INDEX_FINGER_MCP_n',
           'INDEX_FINGER_PIP_p', 'INDEX_FINGER_PIP_n', 'INDEX_FINGER_DIP_p', 'INDEX_FINGER_DIP_n',
@@ -35,11 +35,44 @@ with open('keypoints.csv', 'w', encoding='UTF8') as f:
     writer.writerow(header)
 
     # read all images in the data folder
-    root_dir = r'C:\Users\Xylon\OneDrive\Desktop\SLR\mediapipe\data'
+    root_dir = r'C:\Users\Xylon\Desktop\SLR\mediapipe\data'
+    des_dir = r'C:\Users\Xylon\Desktop\SLR\mediapipe\keypoints'
+    try:
+        if not os.path.exists(des_dir):
+            os.makedirs(des_dir)
+    except OSError:
+        print('Error: Creating directory of data')
+
     for subdir, dirs, files in os.walk(root_dir):
         for file in files:
-            image_path = os.path.join(subdir, file)
             data = []
+            image_path = os.path.join(subdir, file)
+
+            classname = subdir.split("\\")[-2]
+            video_id = subdir.split("\\")[-1]
+            data.append(classname)
+            data.append(video_id)
+
+            name = file.split(".")[0]
+            data.append(name)
+
+            store_path = os.path.join(des_dir, classname)
+            try:
+                if not os.path.exists(store_path):
+                    os.makedirs(store_path)
+            except OSError:
+                print('Error: Creating directory of data')
+
+            store_path = os.path.join(store_path, video_id)
+            try:
+                if not os.path.exists(store_path):
+                    os.makedirs(store_path)
+            except OSError:
+                print('Error: Creating directory of data')
+
+            store_path = os.path.join(store_path, name + '_kp' + '.jpg')
+            print("saving keypoints for " + store_path)
+
             with handsModule.Hands(static_image_mode=True) as hands:
                 image = cv2.imread(image_path)
 
@@ -65,10 +98,9 @@ with open('keypoints.csv', 'w', encoding='UTF8') as f:
                             data.append(normalized)
 
                 writer.writerow(data)
+
                 # cv2.imshow('Test image', image)
-                name = file.split(".")[0]
-                store_path = os.path.join(subdir, name + '_kp' + '.jpg')
-                print("saving keypoints for " + store_path)
+
                 cv2.imwrite(store_path, image)
 
                 cv2.waitKey(0)
