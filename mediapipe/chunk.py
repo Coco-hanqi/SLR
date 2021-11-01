@@ -2,7 +2,7 @@ import cv2
 import os
 
 # scan all raw mp4 videos e.g. raw/open/1.mp4, raw/close/1.mp4
-root_dir = r'C:\Users\Xylon\OneDrive\Desktop\SLR\raw'
+root_dir = r'C:\Users\Xylon\Desktop\WLASL'
 for subdir, dirs, files in os.walk(root_dir):
     for file in files:
         video_path = os.path.join(subdir, file)
@@ -14,7 +14,7 @@ for subdir, dirs, files in os.walk(root_dir):
         except OSError:
             print ('Error: Creating directory of data')
 
-        store_dir = r'C:\Users\Xylon\OneDrive\Desktop\SLR\mediapipe\data'
+        store_dir = r'C:\Users\Xylon\Desktop\SLR\mediapipe\data'
         parents = subdir.split("\\")
         dir_parent = parents[-1]
         store_parent_dir = os.path.join(store_dir, dir_parent)
